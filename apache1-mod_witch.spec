@@ -1,26 +1,27 @@
 %define		mod_name	witch
-%define 	apxs		/usr/sbin/apxs
+%define 	apxs		/usr/sbin/apxs1
 Summary:	Apache module: log the access_log and error_log log into the syslogd
 Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
-Name:		apache-mod_%{mod_name}
+Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
 Release:	1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
 # Source0-md5:	a2ffe2f9e28947426321615e2ba57fc7
-Source1:	apache-mod_witch.conf
+Source1:	%{name}.conf
 URL:		http://savannah.nongnu.org/projects/mod-witch/
 BuildRequires:	%{apxs}
-BuildRequires:	apache(EAPI)-devel
+BuildRequires:	apache1-devel
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
 Requires(preun):	fileutils
-Requires:	apache(EAPI)
+Requires:	apache1
+Obsoletes:	apache-mod_%{mod_name} <= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
-%define         _sysconfdir     /etc/httpd
+%define         _sysconfdir     /etc/apache
 
 %description
 This mod_witch apache module project intend to help the Apache web
@@ -37,7 +38,7 @@ logowanie na inn± maszynê.
 %setup -q -n mod-%{mod_name}-%{version}
 
 %build
-%{apxs} -Wc,-Wall,-pipe -c mod_%{mod_name}.c -o mod_%{mod_name}.so
+%{apxs} -c mod_%{mod_name}.c -o mod_%{mod_name}.so
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -51,8 +52,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
-if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/mod_%{mod_name}.conf" >> /etc/httpd/httpd.conf
+if [ -f %{_sysconfdir}/httpd.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/httpd.conf; then
+        echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/httpd.conf
 fi
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
@@ -62,9 +63,9 @@ fi
 if [ "$1" = "0" ]; then
 	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 	umask 027
-	grep -v "^Include.*mod_%{mod_name}.conf" /etc/httpd/httpd.conf > \
-                /etc/httpd/httpd.conf.tmp
-        mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+	grep -v "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/httpd.conf > \
+                %{_sysconfdir}/httpd.conf.tmp
+        mv -f %{_sysconfdir}/httpd.conf.tmp %{_sysconfdir}/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
