@@ -72,6 +72,6 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README INSTALL COPYING
+%doc ChangeLog README TODO
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/mod_*.conf
 %attr(755,root,root) %{_pkglibdir}/*
