@@ -5,7 +5,7 @@ Summary(pl):	Modu³ do apache: loguje pliki access_log i error_log do demona sysl
 Name:		apache-mod_%{mod_name}
 Version:	0.0.5
 Release:	1
-License:	GPLv2
+License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
 # Source0-md5:	a2ffe2f9e28947426321615e2ba57fc7
