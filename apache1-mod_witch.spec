@@ -8,7 +8,7 @@ Release:	1
 License:	GPLv2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
-# Source0-md5:	080ccc5d789ed5efa0c0a7625e4fa02d
+# Source0-md5:	a2ffe2f9e28947426321615e2ba57fc7
 Source1:	apache-mod_witch.conf
 URL:		http://savannah.nongnu.org/projects/mod-witch
 BuildRequires:	%{apxs}
