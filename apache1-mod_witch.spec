@@ -4,7 +4,7 @@ Summary:	Apache module: log the access_log and error_log log into the syslogd
 Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
 Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
@@ -52,22 +52,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
-if [ -f %{_sysconfdir}/httpd.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/httpd.conf; then
-        echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/httpd.conf
+if [ -f %{_sysconfdir}/apache.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf; then
+        echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/apache.conf
 fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
+if [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
 	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 	umask 027
-	grep -v "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/httpd.conf > \
-                %{_sysconfdir}/httpd.conf.tmp
-        mv -f %{_sysconfdir}/httpd.conf.tmp %{_sysconfdir}/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
+	grep -v "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf > \
+                %{_sysconfdir}/apache.conf.tmp
+        mv -f %{_sysconfdir}/apache.conf.tmp %{_sysconfdir}/apache.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
 	fi
 fi
 
