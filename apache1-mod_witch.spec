@@ -1,7 +1,7 @@
 %define		mod_name	witch
 %define 	apxs		/usr/sbin/apxs
 Summary:	Apache module: log the access_log and error_log log into the syslogd
-Summary(pl):	Modu³ do apache: loguje pliki access_log i error_log do demona syslogd
+Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
 Name:		apache-mod_%{mod_name}
 Version:	0.0.5
 Release:	1
@@ -10,7 +10,7 @@ Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
 # Source0-md5:	a2ffe2f9e28947426321615e2ba57fc7
 Source1:	apache-mod_witch.conf
-URL:		http://savannah.nongnu.org/projects/mod-witch
+URL:		http://savannah.nongnu.org/projects/mod-witch/
 BuildRequires:	%{apxs}
 BuildRequires:	apache(EAPI)-devel
 Requires(post,preun):	%{apxs}
@@ -23,12 +23,15 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define         _sysconfdir     /etc/httpd
 
 %description
-This mod-witch apache module [1] project intend to help the Apache web
-server [1] to log the access_log and error_log log into the syslogd
-[2], this way apache will be able to log onto a remote logger machine
-with the syslogd.
+This mod_witch apache module project intend to help the Apache web
+server to log the access_log and error_log log into the syslogd, this
+way apache will be able to log onto a remote logger machine with the
+syslogd.
 
 %description -l pl
+Modu³ apache'a mod_witch ma pomóc serwerowi WWW apache przekazywaæ
+logi access_log i error_log do syslogd, umo¿liwiaj±c w ten sposób
+logowanie na inn± maszynê.
 
 %prep
 %setup -q -n mod-%{mod_name}-%{version}
