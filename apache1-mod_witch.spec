@@ -4,7 +4,7 @@ Summary:	Apache module: log the access_log and error_log log into the syslogd
 Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
 Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
-Release:	2
+Release:	2.1
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
@@ -12,16 +12,16 @@ Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/
 Source1:	%{name}.conf
 URL:		http://savannah.nongnu.org/projects/mod-witch/
 BuildRequires:	%{apxs}
-BuildRequires:	apache1-devel
-Requires(post,preun):	%{apxs}
-Requires(post,preun):	grep
-Requires(preun):	fileutils
-Requires:	apache1
+BuildRequires:	apache1-devel >= 1.3.33-2
+Requires(triggerpostun):	%{apxs}
+Requires(triggerpostun):	grep
+Requires(triggerpostun):	sed >= 4.0
+Requires:	apache1 >= 1.3.33-2
 Obsoletes:	apache-mod_%{mod_name} <= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
-%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR)
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
+%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)
 
 %description
 This mod_witch apache module project intend to help the Apache web
@@ -42,37 +42,44 @@ logowanie na inn± maszynê.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir}/conf.d}
 
 install mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/mod_%{mod_name}.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/conf.d/90_mod_%{mod_name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
-if [ -f %{_sysconfdir}/apache.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf; then
-	echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/apache.conf
-fi
 if [ -f /var/lock/subsys/apache ]; then
 	/etc/rc.d/init.d/apache restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
-	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
-	umask 027
-	grep -v "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf > \
-		%{_sysconfdir}/apache.conf.tmp
-	mv -f %{_sysconfdir}/apache.conf.tmp %{_sysconfdir}/apache.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
 fi
 
+%triggerpostun -- %{name} < 0.0.5-2.1
+if grep -q '^Include conf\.d' /etc/apache/apache.conf; then
+	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
+	sed -i -e '
+		/^Include.*mod_%{mod_name}\.conf/d
+	' /etc/apache/apache.conf
+else
+	# they're still using old apache.conf
+	sed -i -e '
+		s,^Include.*mod_%{mod_name}\.conf,Include %{_sysconfdir}/conf.d/*_mod_%{mod_name}.conf,
+	' /etc/apache/apache.conf
+fi
+if [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog README TODO
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/mod_*.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/conf.d/*_mod_%{mod_name}.conf
 %attr(755,root,root) %{_pkglibdir}/*
