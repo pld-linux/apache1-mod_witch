@@ -10,7 +10,6 @@ Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
 # Source0-md5:	080ccc5d789ed5efa0c0a7625e4fa02d
 Source1:	apache-mod_witch.conf
-#Patch0:		mod_%{mod_name}-name_clash.patch
 URL:		http://savannah.nongnu.org/projects/mod-witch
 BuildRequires:	%{apxs}
 BuildRequires:	apache(EAPI)-devel
