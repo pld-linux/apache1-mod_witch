@@ -53,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 if [ -f %{_sysconfdir}/apache.conf ] && ! grep -q "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf; then
-        echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/apache.conf
+	echo "Include %{_sysconfdir}/mod_%{mod_name}.conf" >> %{_sysconfdir}/apache.conf
 fi
 if [ -f /var/lock/subsys/apache ]; then
 	/etc/rc.d/init.d/apache restart 1>&2
@@ -64,8 +64,8 @@ if [ "$1" = "0" ]; then
 	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 	umask 027
 	grep -v "^Include.*mod_%{mod_name}.conf" %{_sysconfdir}/apache.conf > \
-                %{_sysconfdir}/apache.conf.tmp
-        mv -f %{_sysconfdir}/apache.conf.tmp %{_sysconfdir}/apache.conf
+		%{_sysconfdir}/apache.conf.tmp
+	mv -f %{_sysconfdir}/apache.conf.tmp %{_sysconfdir}/apache.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
 	fi
