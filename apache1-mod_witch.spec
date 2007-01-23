@@ -4,7 +4,7 @@ Summary:	Apache module: log the access_log and error_log log into the syslogd
 Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
 Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Networking/Daemons
 Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/mod-witch-%{version}.tar.gz
@@ -17,7 +17,7 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(triggerpostun):	%{apxs}
 Requires(triggerpostun):	grep
 Requires(triggerpostun):	sed >= 4.0
-Requires:	apache1 >= 1.3.33-2
+Requires:	apache1(EAPI)
 Obsoletes:	apache-mod_witch <= 0.0.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
