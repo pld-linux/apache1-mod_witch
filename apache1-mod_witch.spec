@@ -1,7 +1,7 @@
 %define		mod_name	witch
 %define 	apxs		/usr/sbin/apxs1
 Summary:	Apache module: log the access_log and error_log log into the syslogd
-Summary(pl):	Modu³ do apache przekazuj±cy access_log i error_log do demona syslogd
+Summary(pl.UTF-8):   ModuÅ‚ do apache przekazujÄ…cy access_log i error_log do demona syslogd
 Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
 Release:	4
@@ -30,10 +30,10 @@ server to log the access_log and error_log log into the syslogd, this
 way apache will be able to log onto a remote logger machine with the
 syslogd.
 
-%description -l pl
-Modu³ apache'a mod_witch ma pomóc serwerowi WWW apache przekazywaæ
-logi access_log i error_log do syslogd, umo¿liwiaj±c w ten sposób
-logowanie na inn± maszynê.
+%description -l pl.UTF-8
+ModuÅ‚ apache'a mod_witch ma pomÃ³c serwerowi WWW apache przekazywaÄ‡
+logi access_log i error_log do syslogd, umoÅ¼liwiajÄ…c w ten sposÃ³b
+logowanie na innÄ… maszynÄ™.
 
 %prep
 %setup -q -n mod-%{mod_name}-%{version}
