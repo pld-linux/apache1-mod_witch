@@ -1,7 +1,7 @@
 %define		mod_name	witch
 %define 	apxs		/usr/sbin/apxs1
 Summary:	Apache module: log the access_log and error_log log into the syslogd
-Summary(pl.UTF-8):   Moduł do apache przekazujący access_log i error_log do demona syslogd
+Summary(pl.UTF-8):	Moduł do apache przekazujący access_log i error_log do demona syslogd
 Name:		apache1-mod_%{mod_name}
 Version:	0.0.5
 Release:	4
