@@ -11,8 +11,7 @@ Source0:	http://savannah.nongnu.org/download/mod-witch/mod-witch.pkg/%{version}/
 # Source0-md5:	a2ffe2f9e28947426321615e2ba57fc7
 Source1:	%{name}.conf
 URL:		http://savannah.nongnu.org/projects/mod-witch/
-BuildRequires:	apache1-apxs
-BuildRequires:	apache1-devel >= 1.3.33-2
+BuildRequires:	apache1-devel >= 1.3.39
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(triggerpostun):	%{apxs}
 Requires(triggerpostun):	grep
